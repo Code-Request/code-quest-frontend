@@ -72,22 +72,30 @@ export default function WorldSelectionPage() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                gap: 2,
               }}
             >
-              <Box>
-                <Typography variant="h3">
+              <Box sx={{ minWidth: 0 }}>
+                <Typography
+                  variant="h3"
+                  sx={{ fontSize: { xs: "1.75rem", sm: "3rem" } }}
+                >
                   Code Quest
                 </Typography>
 
-                <Typography variant="h6">
+                <Typography
+                  variant="h6"
+                  sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}
+                >
                   Explora mundos y aprende Python
                 </Typography>
               </Box>
 
               <RocketLaunchIcon
                 sx={{
-                  fontSize: 70,
+                  fontSize: { xs: 44, sm: 70 },
                   opacity: 0.9,
+                  flexShrink: 0,
                 }}
               />
             </Box>
@@ -142,9 +150,11 @@ export default function WorldSelectionPage() {
                   <Box
                     sx={{
                       display: "flex",
+                      flexDirection: { xs: "column", sm: "row" },
                       justifyContent:
                         "space-between",
-                      alignItems: "center",
+                      gap: { xs: 2, sm: 0 },
+                      alignItems: { xs: "stretch", sm: "center" },
                     }}
                   >
                     {/* INFO */}
@@ -152,7 +162,8 @@ export default function WorldSelectionPage() {
                       sx={{
                         display: "flex",
                         gap: 2,
-                        alignItems: "center",
+                        alignItems: "flex-start",
+                        minWidth: 0,
                       }}
                     >
                       <Box
@@ -300,6 +311,9 @@ export default function WorldSelectionPage() {
                           `/mission/${world.id}`
                         )
                       }
+                      sx={{
+                        alignSelf: { xs: "stretch", sm: "center" },
+                      }}
                     >
                       {unlocked
                         ? "Entrar"

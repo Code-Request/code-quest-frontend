@@ -8,6 +8,7 @@ import {
   CardContent,
   Chip,
   Container,
+  IconButton,
   Typography,
 } from "@mui/material";
 
@@ -16,6 +17,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import CloseIcon from "@mui/icons-material/Close";
 
 import WorldComplete from "../components/WorldComplete";
 import ProgressBar from "../components/ProgressBar";
@@ -68,6 +70,13 @@ export default function MissionPage() {
 
   const [badgesEarned, setBadgesEarned] = useState<Badge[]>([]);
   const [badgeDialogOpen, setBadgeDialogOpen] = useState(false);
+  const [hintCollapsed, setHintCollapsed] = useState(false);
+  const [prevHint, setPrevHint] = useState<string | null>(null);
+
+  if (prevHint !== hint) {
+    setPrevHint(hint);
+    setHintCollapsed(false);
+  }
 
   useEffect(() => {
     if (mission) {
@@ -103,30 +112,31 @@ export default function MissionPage() {
 
   return (
     <Container maxWidth="md">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 4,
-          py: 4,
-        }}
-      >
-        <Box
+<Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "column",
+            gap: 3,
+            py: { xs: 2, sm: 4 },
           }}
         >
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Button
-              startIcon={<ArrowBackIcon />}
-              variant="outlined"
-              onClick={() => navigate("/")}
-            >
-              Volver a mundos
-            </Button>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button
+                startIcon={<ArrowBackIcon />}
+                variant="outlined"
+                onClick={() => navigate("/")}
+                sx={{ whiteSpace: "nowrap" }}
+              >
+                Volver a mundos
+              </Button>
+            </Box>
           </Box>
-        </Box>
 
         <MissionHeader points={points} level={level} />
 
@@ -147,20 +157,23 @@ export default function MissionPage() {
           >
             <CardContent>
               <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 4,
-                }}
-              >
-                <ProgressBar
-                  index={currentIndex}
-                  total={missions.length}
-                />
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 3,
+                  }}
+                >
+                  <ProgressBar
+                    index={currentIndex}
+                    total={missions.length}
+                  />
 
-                <Typography variant="h4">
-                  {mission.title}
-                </Typography>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontSize: { xs: "1.5rem", sm: "2.125rem" } }}
+                  >
+                    {mission.title}
+                  </Typography>
 
                 <Typography color="text.secondary">
                   {mission.description}
@@ -173,11 +186,13 @@ export default function MissionPage() {
                   disabled={missionCompleted || submitting}
                 />
 
-                <Box
+<Box
                   sx={{
                     display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
                     justifyContent: "space-between",
-                    alignItems: "center",
+                    alignItems: { xs: "stretch", sm: "center" },
+                    gap: 2,
                   }}
                 >
                   <Button
@@ -187,6 +202,7 @@ export default function MissionPage() {
                       requestHint(mission.id, hintLevel, code)
                     }
                     disabled={hintLevel >= 3 || hintLoading || submitting}
+                    sx={{ width: { xs: "100%", sm: "auto" } }}
                   >
                     {hintLoading
                       ? "Consultando a Gato Byte..."
@@ -199,6 +215,7 @@ export default function MissionPage() {
                     <Chip
                       color="warning"
                       label={`Ayuda ${hintLevel}/3`}
+                      sx={{ alignSelf: { xs: "flex-start", sm: "auto" } }}
                     />
                   )}
                 </Box>
@@ -207,74 +224,99 @@ export default function MissionPage() {
                   <Box
                     sx={{
                       position: "fixed",
-                      right: 24,
-                      bottom: 24,
+                      right: { xs: 12, sm: 24 },
+                      bottom: { xs: 12, sm: 24 },
                       zIndex: 1300,
                       display: "flex",
+                      flexDirection: "column",
                       alignItems: "flex-end",
                       gap: 1,
-                      maxWidth: { xs: "80vw", sm: 380 },
                     }}
                   >
-                    <Box sx={{ flexShrink: 0, mb: 2 }}>
-                      <GatoByteAvatar size={84} />
-                    </Box>
-
-                    <Box
-                      sx={{
-                        flex: 1,
-                        minWidth: 0,
-                        position: "relative",
-                        bgcolor: "background.paper",
-                        border: "1px solid",
-                        borderColor: "divider",
-                        borderRadius: "16px 16px 16px 4px",
-                        boxShadow: 4,
-                        p: 2,
-                        "&::before": {
-                          content: '""',
-                          position: "absolute",
-                          left: -7,
-                          bottom: 18,
-                          width: 14,
-                          height: 14,
-                          bgcolor: "background.paper",
-                          borderLeft: "1px solid",
-                          borderBottom: "1px solid",
-                          borderColor: "divider",
-                          transform: "rotate(45deg)",
-                        },
-                      }}
-                    >
+                    {!hintCollapsed && (
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          mb: 0.5,
+                          position: "relative",
+                          bgcolor: "background.paper",
+                          border: "1px solid",
+                          borderColor: "divider",
+                          borderRadius: "16px 16px 4px 16px",
+                          boxShadow: 4,
+                          p: { xs: 1.5, sm: 2 },
+                          maxWidth: { xs: "calc(100vw - 100px)", sm: 380 },
+                          "&::before": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: -7,
+                            right: 18,
+                            width: 14,
+                            height: 14,
+                            bgcolor: "background.paper",
+                            borderRight: "1px solid",
+                            borderBottom: "1px solid",
+                            borderColor: "divider",
+                            transform: "rotate(45deg)",
+                          },
                         }}
                       >
-                        <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                          Gato Byte
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          · Ayuda {hintLevel} de 3
-                          {hintSource === "openai"
-                            ? " · IA"
-                            : hintSource === "fallback"
-                              ? " · Pista del juego"
-                              : ""}
-                        </Typography>
-                      </Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            mb: 0.5,
+                            pr: 4,
+                          }}
+                        >
+                          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                            Gato Byte
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            · Ayuda {hintLevel} de 3
+                            {hintSource === "openai"
+                              ? " · IA"
+                              : hintSource === "fallback"
+                                ? " · Pista del juego"
+                                : ""}
+                          </Typography>
+                        </Box>
 
-                      <Typography variant="body2">{hint}</Typography>
-                    </Box>
+                        <Typography variant="body2">{hint}</Typography>
+
+                        <IconButton
+                          aria-label="Contraer ayuda"
+                          size="small"
+                          onClick={() => setHintCollapsed(true)}
+                          sx={{
+                            position: "absolute",
+                            top: 4,
+                            right: 4,
+                          }}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    )}
+
+                    <IconButton
+                      aria-label={hintCollapsed ? "Ver ayuda" : "Contraer ayuda"}
+                      onClick={() =>
+                        setHintCollapsed((collapsed) => !collapsed)
+                      }
+                      sx={{
+                        p: 0,
+                        "&:hover": { opacity: 0.85 },
+                      }}
+                    >
+                      <GatoByteAvatar size={64} />
+                    </IconButton>
                   </Box>
                 )}
 
                 <Box
                   sx={{
                     display: "flex",
+                    flexDirection: { xs: "column-reverse", sm: "row" },
                     justifyContent: "flex-end",
                     gap: 1,
                   }}
@@ -286,6 +328,7 @@ export default function MissionPage() {
                       startIcon={<SkipNextIcon />}
                       onClick={handleSkip}
                       disabled={submitting}
+                      sx={{ width: { xs: "100%", sm: "auto" } }}
                     >
                       Saltar misión
                     </Button>
@@ -296,29 +339,31 @@ export default function MissionPage() {
                     startIcon={<PlayArrowIcon />}
                     onClick={handleRun}
                     disabled={missionCompleted || submitting}
+                    sx={{ width: { xs: "100%", sm: "auto" } }}
                   >
                     {submitting ? "Validando..." : "Ejecutar"}
                   </Button>
                 </Box>
 
                 {missionCompleted &&
-                  currentIndex < missions.length - 1 && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        color="success"
-                        endIcon={<NavigateNextIcon />}
-                        onClick={handleNext}
+                    currentIndex < missions.length - 1 && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                        }}
                       >
-                        Siguiente misión
-                      </Button>
-                    </Box>
-                  )}
+                        <Button
+                          variant="contained"
+                          color="success"
+                          endIcon={<NavigateNextIcon />}
+                          onClick={handleNext}
+                          sx={{ width: { xs: "100%", sm: "auto" } }}
+                        >
+                          Siguiente misión
+                        </Button>
+                      </Box>
+                    )}
 
                 {result && !submitting && (
                   <Alert

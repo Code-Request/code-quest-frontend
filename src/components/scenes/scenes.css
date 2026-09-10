@@ -2038,3 +2038,54 @@
   transform: translateX(-50%);
   z-index: 3;
 }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE MÓVIL
+   ══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .scene {
+    height: 230px;
+  }
+
+  .scene__float-text {
+    font-size: 14px;
+    white-space: normal;
+    max-width: 88%;
+    line-height: 1.3;
+  }
+
+  .scene__output-banner {
+    font-size: 16px;
+    padding: 8px 14px;
+    white-space: normal;
+    max-width: 92%;
+    text-align: center;
+  }
+
+  /* Tarjetas internas con ancho fijo */
+  .db-terminal { width: 310px; }
+  .terminal { width: 280px; }
+  .id-screen { width: 260px; }
+  .id-card { width: 240px; }
+  .level-panel { width: 250px; }
+  .energy-panel { width: 250px; }
+  .ficha { width: 280px; }
+  .alert-panel { width: 230px; }
+
+  /* Filas y grids compactos */
+  .w4-drones-wrap { gap: 16px; }
+  .w4-numlist { width: 200px; }
+  .w4-repair { gap: 12px; }
+  .w4-repair__bars { width: 90px; }
+
+  .w3-access-row,
+  .w3-temp-row,
+  .w3-gen-row,
+  .w3-core-row { gap: 14px; }
+
+  .w5-flow-row { width: 200px; }
+  .w5-repair-track { gap: 12px; }
+  .w5-core-wrap { transform: scale(0.9); }
+
+  .cable-scene { padding: 0 16px; }
+}
