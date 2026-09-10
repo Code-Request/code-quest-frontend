@@ -46,7 +46,7 @@ export default function HomePage() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
+    <Container maxWidth="sm" sx={{ py: { xs: 4, sm: 8 }, px: { xs: 2, sm: 3 } }}>
       <Box
         sx={{
           display: "flex",
@@ -74,11 +74,21 @@ export default function HomePage() {
                 gap: 1,
               }}
             >
-              <RocketLaunchIcon sx={{ fontSize: 70, opacity: 0.9 }} />
+              <RocketLaunchIcon
+                sx={{ fontSize: { xs: 48, sm: 70 }, opacity: 0.9 }}
+              />
 
-              <Typography variant="h3">Code Quest</Typography>
+              <Typography
+                variant="h3"
+                sx={{ fontSize: { xs: "2rem", sm: "3rem" } }}
+              >
+                Code Quest
+              </Typography>
 
-              <Typography variant="h6">
+              <Typography
+                variant="h6"
+                sx={{ fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
+              >
                 Explora mundos y aprende Python
               </Typography>
 
