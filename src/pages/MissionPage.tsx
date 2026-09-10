@@ -103,30 +103,31 @@ export default function MissionPage() {
 
   return (
     <Container maxWidth="md">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 4,
-          py: 4,
-        }}
-      >
-        <Box
+<Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "column",
+            gap: 3,
+            py: { xs: 2, sm: 4 },
           }}
         >
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Button
-              startIcon={<ArrowBackIcon />}
-              variant="outlined"
-              onClick={() => navigate("/")}
-            >
-              Volver a mundos
-            </Button>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button
+                startIcon={<ArrowBackIcon />}
+                variant="outlined"
+                onClick={() => navigate("/")}
+                sx={{ whiteSpace: "nowrap" }}
+              >
+                Volver a mundos
+              </Button>
+            </Box>
           </Box>
-        </Box>
 
         <MissionHeader points={points} level={level} />
 
@@ -147,20 +148,23 @@ export default function MissionPage() {
           >
             <CardContent>
               <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 4,
-                }}
-              >
-                <ProgressBar
-                  index={currentIndex}
-                  total={missions.length}
-                />
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 3,
+                  }}
+                >
+                  <ProgressBar
+                    index={currentIndex}
+                    total={missions.length}
+                  />
 
-                <Typography variant="h4">
-                  {mission.title}
-                </Typography>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontSize: { xs: "1.5rem", sm: "2.125rem" } }}
+                  >
+                    {mission.title}
+                  </Typography>
 
                 <Typography color="text.secondary">
                   {mission.description}
@@ -173,11 +177,13 @@ export default function MissionPage() {
                   disabled={missionCompleted || submitting}
                 />
 
-                <Box
+<Box
                   sx={{
                     display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
                     justifyContent: "space-between",
-                    alignItems: "center",
+                    alignItems: { xs: "stretch", sm: "center" },
+                    gap: 2,
                   }}
                 >
                   <Button
@@ -187,6 +193,7 @@ export default function MissionPage() {
                       requestHint(mission.id, hintLevel, code)
                     }
                     disabled={hintLevel >= 3 || hintLoading || submitting}
+                    sx={{ width: { xs: "100%", sm: "auto" } }}
                   >
                     {hintLoading
                       ? "Consultando a Gato Byte..."
@@ -199,6 +206,7 @@ export default function MissionPage() {
                     <Chip
                       color="warning"
                       label={`Ayuda ${hintLevel}/3`}
+                      sx={{ alignSelf: { xs: "flex-start", sm: "auto" } }}
                     />
                   )}
                 </Box>
@@ -207,13 +215,14 @@ export default function MissionPage() {
                   <Box
                     sx={{
                       position: "fixed",
-                      right: 24,
-                      bottom: 24,
+                      right: { xs: 12, sm: 24 },
+                      bottom: { xs: 12, sm: 24 },
+                      left: { xs: 12, sm: "auto" },
                       zIndex: 1300,
                       display: "flex",
                       alignItems: "flex-end",
                       gap: 1,
-                      maxWidth: { xs: "80vw", sm: 380 },
+                      maxWidth: { xs: "100%", sm: 380 },
                     }}
                   >
                     <Box sx={{ flexShrink: 0, mb: 2 }}>
@@ -275,6 +284,7 @@ export default function MissionPage() {
                 <Box
                   sx={{
                     display: "flex",
+                    flexDirection: { xs: "column-reverse", sm: "row" },
                     justifyContent: "flex-end",
                     gap: 1,
                   }}
@@ -286,6 +296,7 @@ export default function MissionPage() {
                       startIcon={<SkipNextIcon />}
                       onClick={handleSkip}
                       disabled={submitting}
+                      sx={{ width: { xs: "100%", sm: "auto" } }}
                     >
                       Saltar misión
                     </Button>
@@ -296,29 +307,31 @@ export default function MissionPage() {
                     startIcon={<PlayArrowIcon />}
                     onClick={handleRun}
                     disabled={missionCompleted || submitting}
+                    sx={{ width: { xs: "100%", sm: "auto" } }}
                   >
                     {submitting ? "Validando..." : "Ejecutar"}
                   </Button>
                 </Box>
 
                 {missionCompleted &&
-                  currentIndex < missions.length - 1 && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        color="success"
-                        endIcon={<NavigateNextIcon />}
-                        onClick={handleNext}
+                    currentIndex < missions.length - 1 && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                        }}
                       >
-                        Siguiente misión
-                      </Button>
-                    </Box>
-                  )}
+                        <Button
+                          variant="contained"
+                          color="success"
+                          endIcon={<NavigateNextIcon />}
+                          onClick={handleNext}
+                          sx={{ width: { xs: "100%", sm: "auto" } }}
+                        >
+                          Siguiente misión
+                        </Button>
+                      </Box>
+                    )}
 
                 {result && !submitting && (
                   <Alert
