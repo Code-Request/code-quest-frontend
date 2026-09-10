@@ -15,6 +15,7 @@ export function useHint() {
   const [hint, setHint] = useState("");
   const [hintSource, setHintSource] = useState<"openai" | "fallback" | "">("");
   const [hintLevel, setHintLevel] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const loadHintState = (hintsUsed: number) => {
     setHintLevel(hintsUsed);
@@ -38,6 +39,8 @@ export function useHint() {
 
     const nextLevel = currentLevel + 1;
 
+    setLoading(true);
+
     try {
       const response = await api.post<HintResponse>("/api/missions/hint", {
         mission_id: missionId,
@@ -54,6 +57,8 @@ export function useHint() {
       return response.data.hint;
     } catch {
       return null;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,12 +66,14 @@ export function useHint() {
     setHint("");
     setHintSource("");
     setHintLevel(0);
+    setLoading(false);
   };
 
   return {
     hint,
     hintSource,
     hintLevel,
+    loading,
     requestHint,
     resetHints,
     loadHintState,

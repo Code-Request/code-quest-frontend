@@ -26,6 +26,7 @@ export function useMission(worldId?: string) {
   const [loadedWorldId, setLoadedWorldId] = useState<string | null>(null);
   const [code, setCode] = useState("");
   const [result, setResult] = useState("");
+  const [resultType, setResultType] = useState<"success" | "error">("error");
   const [submitting, setSubmitting] = useState(false);
 
   const progressMap = useMemo(
@@ -54,6 +55,8 @@ export function useMission(worldId?: string) {
   const completedOutput = missionProgress?.output ?? "";
   const hintsUsed = missionProgress?.hints_used ?? 0;
 
+  const [localCompleted, setLocalCompleted] = useState(false);
+
   useEffect(() => {
     if (!worldId) return;
 
@@ -66,6 +69,7 @@ export function useMission(worldId?: string) {
         setMissions(res.data);
         setLoadedWorldId(worldId);
         setCurrentIndex(initialIndex(res.data, map));
+        setLocalCompleted(false);
       })
       .catch(() => setResult("Error al cargar las misiones"));
   }, [worldId]);
@@ -74,6 +78,7 @@ export function useMission(worldId?: string) {
     if (missionCompleted || !mission || submitting) return null;
 
     setSubmitting(true);
+    setResult("");
 
     try {
       const res = await api.post<ValidateResponse>("/api/missions/validate", {
@@ -82,13 +87,16 @@ export function useMission(worldId?: string) {
       });
 
       setResult(res.data.message ?? "");
+      setResultType(res.data.success ? "success" : "error");
 
       if (res.data.success) {
-        refreshProfile();
+        await refreshProfile();
+        setLocalCompleted(true);
         return res.data;
       }
     } catch {
       setResult("Error al conectar con el servidor");
+      setResultType("error");
     } finally {
       setSubmitting(false);
     }
@@ -103,8 +111,21 @@ export function useMission(worldId?: string) {
       setCurrentIndex((prev) => prev + 1);
       setCode("");
       setResult("");
+      setLocalCompleted(false);
     }
 
+    return true;
+  };
+
+  const skipMission = () => {
+    if (currentIndex >= missions.length - 1) {
+      return false;
+    }
+
+    setCurrentIndex((prev) => prev + 1);
+    setCode("");
+    setResult("");
+    setLocalCompleted(false);
     return true;
   };
 
@@ -115,7 +136,8 @@ export function useMission(worldId?: string) {
     code,
     setCode,
     result,
-    missionCompleted,
+    resultType,
+    missionCompleted: missionCompleted || localCompleted,
     completedOutput,
     hintsUsed,
     points: profile?.points ?? 0,
@@ -123,5 +145,6 @@ export function useMission(worldId?: string) {
     submitting,
     executeMission,
     nextMission,
+    skipMission,
   };
 }
