@@ -14,7 +14,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 
 import WorldComplete from "../components/WorldComplete";
@@ -25,7 +25,6 @@ import BadgeDialog from "../components/BadgeDialog";
 import MissionScene from "../components/scenes/MissionScene";
 import GatoByteAvatar from "../components/GatoByteAvatar";
 
-import { useAuth } from "../context/AuthContext";
 import { useMission } from "../hooks/useMission";
 import { useWorldProgress } from "../hooks/useWorldProgress";
 import { useHint } from "../hooks/useHint";
@@ -34,7 +33,6 @@ import type { Badge } from "../types";
 export default function MissionPage() {
   const { worldId } = useParams();
   const navigate = useNavigate();
-  const { clearProgress } = useAuth();
 
   const {
     mission,
@@ -43,6 +41,7 @@ export default function MissionPage() {
     code,
     setCode,
     result,
+    resultType,
     missionCompleted,
     completedOutput,
     hintsUsed,
@@ -51,6 +50,7 @@ export default function MissionPage() {
     submitting,
     executeMission,
     nextMission,
+    skipMission,
   } = useMission(worldId);
 
   const {
@@ -61,6 +61,7 @@ export default function MissionPage() {
     hint,
     hintSource,
     hintLevel,
+    loading: hintLoading,
     requestHint,
     loadHintState,
   } = useHint();
@@ -96,6 +97,10 @@ export default function MissionPage() {
     nextMission();
   };
 
+  const handleSkip = () => {
+    skipMission();
+  };
+
   return (
     <Container maxWidth="md">
       <Box
@@ -112,25 +117,15 @@ export default function MissionPage() {
             justifyContent: "space-between",
           }}
         >
-          <Button
-            startIcon={<ArrowBackIcon />}
-            variant="outlined"
-            onClick={() => navigate("/")}
-          >
-            Volver a mundos
-          </Button>
-
-          <Button
-            color="error"
-            variant="outlined"
-            startIcon={<RestartAltIcon />}
-            onClick={() => {
-              clearProgress();
-              window.location.reload();
-            }}
-          >
-            Reset
-          </Button>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Button
+              startIcon={<ArrowBackIcon />}
+              variant="outlined"
+              onClick={() => navigate("/")}
+            >
+              Volver a mundos
+            </Button>
+          </Box>
         </Box>
 
         <MissionHeader points={points} level={level} />
@@ -191,11 +186,13 @@ export default function MissionPage() {
                     onClick={() =>
                       requestHint(mission.id, hintLevel, code)
                     }
-                    disabled={hintLevel >= 3}
+                    disabled={hintLevel >= 3 || hintLoading || submitting}
                   >
-                    {hintLevel >= 3
-                      ? "Ayudas agotadas"
-                      : "Pedir ayuda"}
+                    {hintLoading
+                      ? "Consultando a Gato Byte..."
+                      : hintLevel >= 3
+                        ? "Ayudas agotadas"
+                        : "Pedir ayuda"}
                   </Button>
 
                   {hintLevel > 0 && (
@@ -279,8 +276,21 @@ export default function MissionPage() {
                   sx={{
                     display: "flex",
                     justifyContent: "flex-end",
+                    gap: 1,
                   }}
                 >
+                  {hintLevel >= 3 && !missionCompleted && (
+                    <Button
+                      variant="outlined"
+                      color="warning"
+                      startIcon={<SkipNextIcon />}
+                      onClick={handleSkip}
+                      disabled={submitting}
+                    >
+                      Saltar misión
+                    </Button>
+                  )}
+
                   <Button
                     variant="contained"
                     startIcon={<PlayArrowIcon />}
@@ -310,12 +320,12 @@ export default function MissionPage() {
                     </Box>
                   )}
 
-                {result && (
+                {result && !submitting && (
                   <Alert
                     severity={
-                      missionCompleted
+                      resultType === "success"
                         ? "success"
-                        : "info"
+                        : "error"
                     }
                   >
                     {result}
