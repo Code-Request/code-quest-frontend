@@ -8,6 +8,7 @@ import {
   CardContent,
   Chip,
   Container,
+  IconButton,
   Typography,
 } from "@mui/material";
 
@@ -16,6 +17,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import CloseIcon from "@mui/icons-material/Close";
 
 import WorldComplete from "../components/WorldComplete";
 import ProgressBar from "../components/ProgressBar";
@@ -68,6 +70,13 @@ export default function MissionPage() {
 
   const [badgesEarned, setBadgesEarned] = useState<Badge[]>([]);
   const [badgeDialogOpen, setBadgeDialogOpen] = useState(false);
+  const [hintDismissed, setHintDismissed] = useState(false);
+  const [prevHint, setPrevHint] = useState<string | null>(null);
+
+  if (prevHint !== hint) {
+    setPrevHint(hint);
+    setHintDismissed(false);
+  }
 
   useEffect(() => {
     if (mission) {
@@ -211,22 +220,23 @@ export default function MissionPage() {
                   )}
                 </Box>
 
-                {hint && (
+                {hint && !hintDismissed && (
                   <Box
                     sx={{
-                      position: "fixed",
-                      right: { xs: 12, sm: 24 },
-                      bottom: { xs: 12, sm: 24 },
-                      left: { xs: 12, sm: "auto" },
-                      zIndex: 1300,
+                      position: { xs: "static", sm: "fixed" },
+                      right: { xs: "auto", sm: 24 },
+                      bottom: { xs: "auto", sm: 24 },
+                      left: { xs: "auto", sm: "auto" },
+                      zIndex: { xs: "auto", sm: 1300 },
                       display: "flex",
                       alignItems: "flex-end",
                       gap: 1,
+                      width: { xs: "100%", sm: "auto" },
                       maxWidth: { xs: "100%", sm: 380 },
                     }}
                   >
                     <Box sx={{ flexShrink: 0, mb: 2 }}>
-                      <GatoByteAvatar size={84} />
+                      <GatoByteAvatar size={64} />
                     </Box>
 
                     <Box
@@ -239,7 +249,7 @@ export default function MissionPage() {
                         borderColor: "divider",
                         borderRadius: "16px 16px 16px 4px",
                         boxShadow: 4,
-                        p: 2,
+                        p: { xs: 1.5, sm: 2 },
                         "&::before": {
                           content: '""',
                           position: "absolute",
@@ -261,6 +271,7 @@ export default function MissionPage() {
                           alignItems: "center",
                           gap: 1,
                           mb: 0.5,
+                          pr: 4,
                         }}
                       >
                         <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
@@ -277,6 +288,19 @@ export default function MissionPage() {
                       </Box>
 
                       <Typography variant="body2">{hint}</Typography>
+
+                      <IconButton
+                        aria-label="Cerrar ayuda"
+                        size="small"
+                        onClick={() => setHintDismissed(true)}
+                        sx={{
+                          position: "absolute",
+                          top: 4,
+                          right: 4,
+                        }}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
                     </Box>
                   </Box>
                 )}
