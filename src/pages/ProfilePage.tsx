@@ -53,14 +53,18 @@ export default function ProfilePage() {
             <Box
               sx={{
                 display: "flex",
+                flexDirection: { xs: "column-reverse", sm: "row" },
                 justifyContent: "space-between",
-                alignItems: "center",
+                alignItems: { xs: "flex-start", sm: "center" },
+                gap: 2,
               }}
             >
-              <Box>
-                <Typography variant="h4">{profile.username}</Typography>
+              <Box sx={{ minWidth: 0 }}>
+                <Typography variant="h4" sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}>
+                  {profile.username}
+                </Typography>
 
-                <Typography variant="h6">
+                <Typography variant="h6" sx={{ fontSize: { xs: "1rem", sm: "1.25rem" } }}>
                   Nivel {profile.level}
                 </Typography>
 
@@ -70,6 +74,7 @@ export default function ProfilePage() {
                     alignItems: "center",
                     gap: 1,
                     mt: 1,
+                    flexWrap: "wrap",
                   }}
                 >
                   <Chip
@@ -90,7 +95,13 @@ export default function ProfilePage() {
                 </Box>
               </Box>
 
-              <RocketLaunchIcon sx={{ fontSize: 70, opacity: 0.9 }} />
+              <RocketLaunchIcon
+                sx={{
+                  fontSize: { xs: 44, sm: 70 },
+                  opacity: 0.9,
+                  flexShrink: 0,
+                }}
+              />
             </Box>
 
             <Box sx={{ mt: 3 }}>

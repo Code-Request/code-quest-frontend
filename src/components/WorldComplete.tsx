@@ -12,19 +12,22 @@ export default function WorldComplete() {
         >
         <CardContent>
             <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-            <EmojiEventsIcon color="warning" sx={{ fontSize: 60 }} />
+              <EmojiEventsIcon
+                color="warning"
+                sx={{ fontSize: { xs: 44, sm: 60 }, flexShrink: 0 }}
+              />
 
-            <Box>
-                <Typography variant="h5">
-                Mundo completado
+              <Box sx={{ minWidth: 0 }}>
+                <Typography variant="h5" sx={{ fontSize: { xs: "1.25rem", sm: "1.5rem" } }}>
+                  Mundo completado
                 </Typography>
 
-                <Typography color="text.secondary">
-                ¡Excelente trabajo! Has terminado todas las misiones.
+                <Typography color="text.secondary" variant="body2">
+                  ¡Excelente trabajo! Has terminado todas las misiones.
                 </Typography>
+              </Box>
             </Box>
-            </Box>
-        </CardContent>
+          </CardContent>
     </Card>
   );
 }

@@ -44,10 +44,12 @@ export default function RankingPage() {
       >
         <EmojiEventsIcon color="warning" sx={{ fontSize: 40 }} />
 
-        <Box>
-          <Typography variant="h4">Ranking</Typography>
+        <Box sx={{ minWidth: 0 }}>
+          <Typography variant="h4" sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}>
+            Ranking
+          </Typography>
 
-          <Typography color="text.secondary">
+          <Typography color="text.secondary" variant="body2">
             Los mejores operadores de Nova City.
           </Typography>
         </Box>
@@ -56,16 +58,19 @@ export default function RankingPage() {
       {loading ? (
         <Typography>Cargando ranking...</Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
-          <Table>
+        <TableContainer
+          component={Paper}
+          sx={{ borderRadius: 3, overflowX: "auto" }}
+        >
+          <Table size="small">
             <TableHead>
               <TableRow sx={{ bgcolor: "#f1f5f9" }}>
                 <TableCell>#</TableCell>
                 <TableCell>Operador</TableCell>
-                <TableCell align="center">Nivel</TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="center">Nivel</TableCell>
                 <TableCell align="center">Puntos</TableCell>
-                <TableCell align="center">Misiones</TableCell>
-                <TableCell align="center">Mundos</TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="center">Misiones</TableCell>
+                <TableCell sx={{ display: { xs: "none", md: "table-cell" } }} align="center">Mundos</TableCell>
               </TableRow>
             </TableHead>
 
@@ -103,21 +108,21 @@ export default function RankingPage() {
                     </TableCell>
 
                     <TableCell>
-                      <Typography sx={{ fontWeight: isMe ? 700 : 400 }}>
+                      <Typography sx={{ fontWeight: isMe ? 700 : 400, whiteSpace: "nowrap" }}>
                         {entry.username}
                         {isMe && " (vos)"}
                       </Typography>
                     </TableCell>
 
-                    <TableCell align="center">{entry.level}</TableCell>
+                    <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="center">{entry.level}</TableCell>
 
                     <TableCell align="center">{entry.points}</TableCell>
 
-                    <TableCell align="center">
+                    <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="center">
                       {entry.missions_completed}
                     </TableCell>
 
-                    <TableCell align="center">
+                    <TableCell sx={{ display: { xs: "none", md: "table-cell" } }} align="center">
                       {entry.worlds_completed}
                     </TableCell>
                   </TableRow>
