@@ -70,12 +70,12 @@ export default function MissionPage() {
 
   const [badgesEarned, setBadgesEarned] = useState<Badge[]>([]);
   const [badgeDialogOpen, setBadgeDialogOpen] = useState(false);
-  const [hintDismissed, setHintDismissed] = useState(false);
+  const [hintCollapsed, setHintCollapsed] = useState(false);
   const [prevHint, setPrevHint] = useState<string | null>(null);
 
   if (prevHint !== hint) {
     setPrevHint(hint);
-    setHintDismissed(false);
+    setHintCollapsed(false);
   }
 
   useEffect(() => {
@@ -220,88 +220,96 @@ export default function MissionPage() {
                   )}
                 </Box>
 
-                {hint && !hintDismissed && (
+                {hint && (
                   <Box
                     sx={{
-                      position: { xs: "static", sm: "fixed" },
-                      right: { xs: "auto", sm: 24 },
-                      bottom: { xs: "auto", sm: 24 },
-                      left: { xs: "auto", sm: "auto" },
-                      zIndex: { xs: "auto", sm: 1300 },
+                      position: "fixed",
+                      right: { xs: 12, sm: 24 },
+                      bottom: { xs: 12, sm: 24 },
+                      zIndex: 1300,
                       display: "flex",
+                      flexDirection: "column",
                       alignItems: "flex-end",
                       gap: 1,
-                      width: { xs: "100%", sm: "auto" },
-                      maxWidth: { xs: "100%", sm: 380 },
                     }}
                   >
-                    <Box sx={{ flexShrink: 0, mb: 2 }}>
-                      <GatoByteAvatar size={64} />
-                    </Box>
-
-                    <Box
-                      sx={{
-                        flex: 1,
-                        minWidth: 0,
-                        position: "relative",
-                        bgcolor: "background.paper",
-                        border: "1px solid",
-                        borderColor: "divider",
-                        borderRadius: "16px 16px 16px 4px",
-                        boxShadow: 4,
-                        p: { xs: 1.5, sm: 2 },
-                        "&::before": {
-                          content: '""',
-                          position: "absolute",
-                          left: -7,
-                          bottom: 18,
-                          width: 14,
-                          height: 14,
-                          bgcolor: "background.paper",
-                          borderLeft: "1px solid",
-                          borderBottom: "1px solid",
-                          borderColor: "divider",
-                          transform: "rotate(45deg)",
-                        },
-                      }}
-                    >
+                    {!hintCollapsed && (
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          mb: 0.5,
-                          pr: 4,
+                          position: "relative",
+                          bgcolor: "background.paper",
+                          border: "1px solid",
+                          borderColor: "divider",
+                          borderRadius: "16px 16px 4px 16px",
+                          boxShadow: 4,
+                          p: { xs: 1.5, sm: 2 },
+                          maxWidth: { xs: "calc(100vw - 100px)", sm: 380 },
+                          "&::before": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: -7,
+                            right: 18,
+                            width: 14,
+                            height: 14,
+                            bgcolor: "background.paper",
+                            borderRight: "1px solid",
+                            borderBottom: "1px solid",
+                            borderColor: "divider",
+                            transform: "rotate(45deg)",
+                          },
                         }}
                       >
-                        <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                          Gato Byte
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          · Ayuda {hintLevel} de 3
-                          {hintSource === "openai"
-                            ? " · IA"
-                            : hintSource === "fallback"
-                              ? " · Pista del juego"
-                              : ""}
-                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            mb: 0.5,
+                            pr: 4,
+                          }}
+                        >
+                          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                            Gato Byte
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            · Ayuda {hintLevel} de 3
+                            {hintSource === "openai"
+                              ? " · IA"
+                              : hintSource === "fallback"
+                                ? " · Pista del juego"
+                                : ""}
+                          </Typography>
+                        </Box>
+
+                        <Typography variant="body2">{hint}</Typography>
+
+                        <IconButton
+                          aria-label="Contraer ayuda"
+                          size="small"
+                          onClick={() => setHintCollapsed(true)}
+                          sx={{
+                            position: "absolute",
+                            top: 4,
+                            right: 4,
+                          }}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
                       </Box>
+                    )}
 
-                      <Typography variant="body2">{hint}</Typography>
-
-                      <IconButton
-                        aria-label="Cerrar ayuda"
-                        size="small"
-                        onClick={() => setHintDismissed(true)}
-                        sx={{
-                          position: "absolute",
-                          top: 4,
-                          right: 4,
-                        }}
-                      >
-                        <CloseIcon fontSize="small" />
-                      </IconButton>
-                    </Box>
+                    <IconButton
+                      aria-label={hintCollapsed ? "Ver ayuda" : "Contraer ayuda"}
+                      onClick={() =>
+                        setHintCollapsed((collapsed) => !collapsed)
+                      }
+                      sx={{
+                        p: 0,
+                        "&:hover": { opacity: 0.85 },
+                      }}
+                    >
+                      <GatoByteAvatar size={64} />
+                    </IconButton>
                   </Box>
                 )}
 
